@@ -1,0 +1,128 @@
+server:
+  port: 8601
+spring:
+  aop:
+    proxy-target-class: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  resources:
+    add-mappings: true
+  application:
+    name: alipayCreditPay_RBAC
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
+
+
+  datasource:
+#    url: jdbc:mysql://103.126.241.221:3307/alipaycreditpay?characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=CTT&
+#    username: root
+#    password: Ruixiao123
+    url: jdbc:mysql://127.0.0.1:3306/alipaycreditpay?characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=CTT&
+    username: root
+    password: 'root'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      filters: stat,wall
+      initial-size: 50
+      max-active: 500
+      max-pool-prepared-statement-per-connection-size: 20
+      max-wait: 300000
+      min-evictable-idle-time-millis: 300000
+      min-idle: 50
+
+
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.greatwall.jhgx.domain
+  global-config:
+    db-config:
+      # 主键ID类型
+      id-type: id_worker
+      # 数据库类型
+      db-type: mysql
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+
+swagger:
+  show: true
+
+hprs:
+  security:
+    ignore:
+      # 忽略认证的地址
+      httpUrls: >
+        /auth/**,
+        /upload/**,
+        /server/**,
+        /server/**/**,
+        /sample1/**,
+        /sample,
+        /css/**,
+        /excel/**,
+        /images/**,
+        /image/**,
+        /js/**,
+        /**/*.html,
+        /**/*.css,
+        /**/*.js,
+        /**/downLoad,
+        /**/downLoad/**,
+        /**/**/downLoad,
+        /**/**/downLoad/**,
+        /alipayCreditPay/testApi
+  #单位秒
+  cache-manager:
+    configs:
+      - key: menu
+        second: 600
+      - key: user
+        second: 1800
+
+
+#jwt
+jwt:
+  header: Authorization
+  secret: mySecret
+  # token 过期时间 单位毫秒
+  expiration: 7200000
+  # token 距离过期时间的剩余时间，自动刷新token 单位毫秒，通常设置为过期时间的一半
+  # 当前值的意思是两小时过期时间，一小时刷新时间：用户在一小时后请求后台会刷新过期时间到当前请求时间的两小时后
+  refreshTime: 3600000
+  # token持有者,
+  prefix: 'Bearer:'
+  auth:
+    # 授权路径
+    path: /login
+
+
+
+payConfig:
+  scPay: https://api.ipsunion.com/bootapi/v2/bootsm/scPay
+  query: https://api.ipsunion.com/bootapi/v2/bootsm/query
+  uploadmerImage: https://api.ipsunion.com/bootapi/v1/openApi/uploadmerImage
+  scMember: https://api.ipsunion.com/bootapi/v2/bootsm/scMember
+  scMemberQuery: https://api.ipsunion.com/bootapi/v2/bootsm/queryMer
+  # 机构商户号
+  merchantId: 581631
+  # 机构商户密码
+  key: 2ep65eseuw39n25c
+  # 费率-具体与机构商户商定
+  consRate: 0.35
+  # 如果有域名或者外网ip，则配置成应用后台的callback方法访问地址，如http://56.34.124.44/alipayCreditPay/callback.如果不配置，则只有主动去查询了。
+  notifyUrl: test
+  clientIp: 223.8.8.8
+  agencyType: wzb
+  # 默认进件人身份证号码
+  certId: 121212
+  # 默认进件人手机号码
+  mobile: 2112
+  # 默认进件人银行卡号
+  cardNo: 233232
+  # 接口被调用时md5该密钥与签名sign来校验
+  md5Key: 123456

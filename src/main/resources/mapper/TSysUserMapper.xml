@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greatwall.jhgx.mapper.TSysUserMapper">
+    <resultMap id="BaseResultMap" type="com.greatwall.jhgx.domain.TSysUser">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="user_phone" jdbcType="VARCHAR" property="userPhone"/>
+        <result column="user_email" jdbcType="VARCHAR" property="userEmail"/>
+        <result column="user_sex" jdbcType="VARCHAR" property="userSex"/>
+        <result column="enabled" jdbcType="BOOLEAN" property="enabled"/>
+        <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"/>
+        <result column="is_del" jdbcType="BOOLEAN" property="isDel"/>
+        <result column="wx_union_id" jdbcType="VARCHAR" property="wxUnionId"/>
+        <result column="wx_open_id" jdbcType="VARCHAR" property="wxOpenId"/>
+        <result column="UPDATE_BY" jdbcType="INTEGER" property="updateBy"/>
+        <result column="CREATE_BY" jdbcType="INTEGER" property="createBy"/>
+        <result column="CREATE_AT" jdbcType="TIMESTAMP" property="createAt"/>
+        <result column="UPDATE_AT" jdbcType="TIMESTAMP" property="updateAt"/>
+    </resultMap>
+
+    <select id="selectUserPage" parameterType="map" resultMap="BaseResultMap">
+        SELECT u.*
+        FROM T_SYS_USER u
+        LEFT JOIN T_SYS_USER_ROLE ur ON u.ID = ur.USER_ID
+        LEFT JOIN T_SYS_ROLE r ON ur.ROLE_ID = r.ID
+        WHERE u.is_del = 0 AND (ISV_CODE IS NULL OR ISV_CODE = '')
+        <if test="user.userName != null and user.userName != ''">
+            AND u.user_name LIKE CONCAT(CONCAT('%', #{user.userName}), '%')
+        </if>
+        <if test="user.userEmail != null and user.userEmail != ''">
+            AND u.user_email LIKE CONCAT(CONCAT('%', #{user.userEmail}), '%')
+        </if>
+        <choose>
+            <when test="user.roleId != null and user.roleId != ''">
+                AND r.id = #{user.roleId}
+            </when>
+            <otherwise>
+                <if test="roleIds.size() > 0">
+                    AND (r.id in
+                    <foreach collection="roleIds" index="index" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach> or ur.ID is null)
+                </if>
+            </otherwise>
+        </choose>
+        group by u.id
+    </select>
+
+    <select id="getUserNamesByUserIds" parameterType="string" resultType="string">
+        SELECT GROUP_CONCAT(USER_NAME) FROM T_SYS_USER WHERE FIND_IN_SET(ID,#{userIds});
+    </select>
+
+    <update id="updateNickNameByUserName" parameterType="map">
+        UPDATE T_SYS_USER SET NICK_NAME = #{nickName} WHERE USER_NAME = #{userName} AND IS_DEL = 0
+    </update>
+</mapper>

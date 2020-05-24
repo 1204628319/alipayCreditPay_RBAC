@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greatwall.jhgx.mapper.PayOrderMapper">
+    <select id="selectOrder" parameterType="string" resultType="com.greatwall.jhgx.domain.PayOrder">
+        SELECT ORDER_AMT, MER_ORDER_ID, TRANS_TIME, AUTH_CODE, PAY_STATUS
+        FROM pay_order
+        WHERE AUTH_CODE = #{authCode}
+        ORDER BY CREATE_TIME DESC
+    </select>
+</mapper>

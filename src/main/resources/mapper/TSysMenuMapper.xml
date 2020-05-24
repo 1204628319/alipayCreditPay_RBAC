@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greatwall.jhgx.mapper.TSysMenuMapper">
+    <resultMap id="BaseResultMap" type="com.greatwall.jhgx.domain.TSysMenu">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="MENU_NAME" jdbcType="VARCHAR" property="menuName"/>
+        <result column="SORT" jdbcType="INTEGER" property="sort"/>
+        <result column="MENU_PATH" jdbcType="VARCHAR" property="menuPath"/>
+        <result column="COMPONENT" jdbcType="VARCHAR" property="component"/>
+        <result column="MENU_ICON" jdbcType="VARCHAR" property="menuIcon"/>
+        <result column="PID" jdbcType="INTEGER" property="pid"/>
+        <result column="IS_FRAME" jdbcType="BOOLEAN" property="isFrame"/>
+        <result column="IS_DEL" jdbcType="BOOLEAN" property="isDel"/>
+        <result column="UPDATE_BY" jdbcType="INTEGER" property="updateBy"/>
+        <result column="CREATE_BY" jdbcType="INTEGER" property="createBy"/>
+        <result column="CREATE_AT" jdbcType="TIMESTAMP" property="createAt"/>
+        <result column="UPDATE_AT" jdbcType="TIMESTAMP" property="updateAt"/>
+    </resultMap>
+
+    <select id="findByRoleId" parameterType="Long" resultMap="BaseResultMap">
+        SELECT
+        T1.ID, T1.MENU_NAME, T1.SORT, T1.MENU_PATH, T1.COMPONENT, T1.MENU_ICON, T1.PID, T1.IS_FRAME, T1.IS_DEL,
+        T1.UPDATE_BY, T1.CREATE_BY, T1.CREATE_AT, T1.UPDATE_AT
+        FROM T_SYS_MENU T1, T_SYS_ROLE_MENU T2
+        WHERE
+        T1.ID = T2.MENU_ID
+        AND
+        T2.ROLE_ID = #{roleId}
+        ORDER BY sort ASC
+  </select>
+</mapper>
